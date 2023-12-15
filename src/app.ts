@@ -1,7 +1,9 @@
+import { envs } from './config/plugins/envs.plugin'
 import { Server } from './presentation/server'
 
 const main = async (): Promise<void> => {
-  Server.start()
+  // Server.start()
+  // console.log(envs)
 }
 
 (async () => {
