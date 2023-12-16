@@ -20,7 +20,12 @@ export class CheckService implements CheckServiceUseCase {
       const req = await fetch(url)
       if (!req.ok) throw new Error(`Error on check service ${url}`)
 
-      const log = new LogEntity(`Service ${url} is working`, LogSeverityLevel.low)
+      const log = new LogEntity({
+        message: `Service ${url} is working`,
+        level: LogSeverityLevel.low,
+        origin: 'check-service.ts'
+      })
+
       await this.logRepository.saveLog(log)
       // this.successCallback && this.successCallback() Linter error
       // Copilot suggestion: this.successCallback?.()
@@ -29,7 +34,11 @@ export class CheckService implements CheckServiceUseCase {
       return true
     } catch (error) {
       const errorMessage = `${url} is not ok. ${String(error)}`
-      const log = new LogEntity(errorMessage, LogSeverityLevel.high)
+      const log = new LogEntity({
+        message: errorMessage,
+        level: LogSeverityLevel.high,
+        origin: 'check-service.ts'
+      })
 
       try {
         await this.logRepository.saveLog(log)
