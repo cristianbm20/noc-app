@@ -12,3 +12,6 @@ PROD=false
 ```
 3. Run ```npm install```
 4. Run ```npm run dev``` / ```npm run dev:watch```
+
+## Obtain Gmail Key
+[Google AppPasswords](https://myaccount.google.com/u/0/apppasswords)
