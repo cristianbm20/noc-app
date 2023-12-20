@@ -1,19 +1,27 @@
 import { LogEntity, LogSeverityLevel } from '../../entities/log.entity'
 import { LogRepository } from '../../repository/log.repository'
 
-interface CheckServiceUseCase {
+interface CheckServiceMultipleUseCase {
   execute: (url: string) => Promise<boolean>
 }
 
 type SuccessCallback = (() => void) | undefined
 type ErrorCallback = ((error: Error) => void) | undefined
 
-export class CheckService implements CheckServiceUseCase {
+export class CheckServiceMultiple implements CheckServiceMultipleUseCase {
   constructor (
-    private readonly logRepository: LogRepository,
+    private readonly logRepository: LogRepository[],
     private readonly successCallback: SuccessCallback,
     private readonly errorCallback: ErrorCallback
   ) {}
+
+  private callLogs (log: LogEntity): void {
+    this.logRepository.forEach(logRepository => {
+      logRepository.saveLog(log).catch(error => {
+        console.error('Error saving log:', error)
+      })
+    })
+  }
 
   public async execute (url: string): Promise<boolean> {
     try {
@@ -26,7 +34,7 @@ export class CheckService implements CheckServiceUseCase {
         origin: 'check-service.ts'
       })
 
-      await this.logRepository.saveLog(log)
+      this.callLogs(log)
       // this.successCallback && this.successCallback() --> Linter error
       // Copilot suggestion: this.successCallback?.()
       this.successCallback?.()
@@ -41,7 +49,7 @@ export class CheckService implements CheckServiceUseCase {
       })
 
       try {
-        await this.logRepository.saveLog(log)
+        this.callLogs(log)
       } catch (innerError) {
         console.error('Error saving log after primary operation failed:', innerError)
       }
