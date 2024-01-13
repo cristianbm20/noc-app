@@ -16,7 +16,8 @@ PROD=false
 
 3. Run `npm install`
 4. Run `docker compose up` in the root directory of the project to start the databases
-5. Run `npm run dev` / `npm run dev:watch`
+5. Run `npx prisma migrate dev` to prepare the database for development
+6. Run `npm run dev` / `npm run dev:watch`
 
 ## Obtain Gmail Key
 
